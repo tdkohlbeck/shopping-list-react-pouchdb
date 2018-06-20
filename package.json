@@ -23,7 +23,8 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-scripts": "1.0.10"
+    "react-scripts": "1.0.10",
+    "react-select": "^1.2.1"
   },
   "scripts": {
     "start": "node log && react-scripts start",

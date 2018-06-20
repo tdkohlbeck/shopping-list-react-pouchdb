@@ -21,26 +21,27 @@ import PouchDB from 'pouchdb';
 
 import ShoppingLists from './components/ShoppingLists';
 import ShoppingList from './components/ShoppingList';
+import ActiveDatumInput from './components/ActiveDatumInput'
 
 // create a custom color scheme for Material-UI
 const muiTheme = getMuiTheme({
   palette: {
-    textColor: grey800, 
-    alternateTextColor: white, 
-    primary1Color: pinkA100,
+    textColor: grey800,
+    alternateTextColor: white,
+    primary1Color: '#ff3333',
     accent1Color: blueGrey500
   }
 });
 
 const appBarStyle = {
-  backgroundColor: blueGrey500, 
-  width: "100%", 
+  backgroundColor: '#ff3333',
+  width: "100%",
 };
 
 const NOLISTMSG = "Click the + sign above to create a shopping list."
 const NOITEMSMSG = "Click the + sign above to create a shopping list item."
 
-/** 
+/**
  * This is the main React application
  */
 class App extends React.Component {
@@ -48,15 +49,15 @@ class App extends React.Component {
     super(props);
     // manage remoteDB here because user might change it via the UI
     // but don't put it in state because changing the backend db doesn't require a re-render
-    this.remoteDB = props.remoteDB; 
+    this.remoteDB = props.remoteDB;
 
     this.state = {
-      shoppingList: null, 
-      shoppingLists: [], 
+      shoppingList: null,
+      shoppingLists: [],
       totalShoppingListItemCount: List(), //Immutable.js List with list ids as keys
       checkedTotalShoppingListItemCount: List(), //Immutable.js List with list ids as keys
-      shoppingListItems: null, 
-      adding: false, 
+      shoppingListItems: null,
+      adding: false,
       view: 'lists',
       newName: '',
       settingsOpen: false,
@@ -66,7 +67,7 @@ class App extends React.Component {
 
   /**
    * Before this component shows the user anything, get the data from the local PouchDB
-   * 
+   *
    * Then, if we were initialized with a remote DB, synchronize with it
    */
   componentDidMount = () => {
@@ -102,13 +103,13 @@ class App extends React.Component {
       return foundLists;
     }).then( foundLists => {
       return this.props.shoppingListRepository.findItemsCountByList();
-    }).then( countsList => { 
+    }).then( countsList => {
       console.log('TOTAL COUNT LIST');
       console.log(countsList);
       totalCount = countsList;
       return this.props.shoppingListRepository.findItemsCountByList({
         selector: {
-          type: 'item', 
+          type: 'item',
           checked: true
         },
         fields: ['list']
@@ -118,18 +119,18 @@ class App extends React.Component {
       console.log(checkedList);
       checkedCount = checkedList;
       this.setState({
-        view: 'lists', 
-        shoppingLists: lists, 
+        view: 'lists',
+        shoppingLists: lists,
         shoppingList: null,
-        shoppingListItems: null, 
-        checkedTotalShoppingListItemCount: checkedCount, 
+        shoppingListItems: null,
+        checkedTotalShoppingListItemCount: checkedCount,
         totalShoppingListItemCount: totalCount
       });
     });
   }
 
   /**
-   * Get a shopping list by id 
+   * Get a shopping list by id
    * @param {string} listid id of a shopping list
    */
   openShoppingList = (listid) => {
@@ -138,7 +139,7 @@ class App extends React.Component {
     }).then(list => {
       this.getShoppingListItems(listid).then(items => {
         this.setState({
-          view: 'items', 
+          view: 'items',
           shoppingList: list,
           shoppingListItems: items
         });
@@ -153,7 +154,7 @@ class App extends React.Component {
   getShoppingListItems = (listid) => {
     return this.props.shoppingListRepository.findItems({
       selector: {
-        type: 'item', 
+        type: 'item',
         list: listid
       }
     });
@@ -166,12 +167,12 @@ class App extends React.Component {
   refreshShoppingListItems = (listid) => {
     this.props.shoppingListRepository.findItems({
       selector: {
-        type: 'item', 
+        type: 'item',
         list: listid
       }
     }).then(items => {
       this.setState({
-        view: 'items', 
+        view: 'items',
         shoppingListItems: items
       });
     });
@@ -271,12 +272,12 @@ class App extends React.Component {
 
   /**
    * Create a new shopping list or item based on where the event came from
-   * @param {event} evt The click event on the UI element requesting to the action. Get the name from state and decide whether to add a list or an item based on the `state.view` 
+   * @param {event} evt The click event on the UI element requesting to the action. Get the name from state and decide whether to add a list or an item based on the `state.view`
    */
   createNewShoppingListOrItem = (e) => {
     e.preventDefault();
     this.setState({adding: false});
-    
+
     if (this.state.view === 'lists') {
       let shoppingList = this.props.shoppingListFactory.newShoppingList({
         title: this.state.newName
@@ -290,7 +291,7 @@ class App extends React.Component {
       this.props.shoppingListRepository.putItem(item).then(item => {
         this.getShoppingListItems(this.state.shoppingList._id).then(items => {
           this.setState({
-            view: 'items', 
+            view: 'items',
             shoppingListItems: items
           });
         });
@@ -320,11 +321,11 @@ class App extends React.Component {
     return (
       <form onSubmit={this.createNewShoppingListOrItem} style={{marginTop:'12px'}}>
           <Paper>
-            <TextField className="form-control" type="text" 
-              autoFocus={true} 
-              hintText="Name..." 
-              onChange={this.updateName} 
-              fullWidth={false} 
+            <TextField className="form-control" type="text"
+              autoFocus={true}
+              hintText="Name..."
+              onChange={this.updateName}
+              fullWidth={false}
               style={{padding:'0px 12px',width:'calc(100% - 24px)'}}
               underlineStyle={{width:'calc(100% - 24px)'}}/>
           </Paper>
@@ -336,17 +337,17 @@ class App extends React.Component {
    * Show UI for shopping lists
    */
   renderShoppingLists = () => {
-    if (this.state.shoppingLists.length < 1) 
+    if (this.state.shoppingLists.length < 1)
       return ( <Card style={{margin:"12px 0"}}><CardTitle title={NOLISTMSG} /></Card> );
     return (
-      <ShoppingLists 
-        shoppingLists={this.state.shoppingLists} 
-        openListFunc={this.openShoppingList} 
-        deleteListFunc={this.deleteShoppingList} 
-        renameListFunc={this.renameShoppingList} 
-        checkAllFunc={this.checkAllListItems} 
+      <ShoppingLists
+        shoppingLists={this.state.shoppingLists}
+        openListFunc={this.openShoppingList}
+        deleteListFunc={this.deleteShoppingList}
+        renameListFunc={this.renameShoppingList}
+        checkAllFunc={this.checkAllListItems}
         totalCounts={this.state.totalShoppingListItemCount}
-        checkedCounts={this.state.checkedTotalShoppingListItemCount} /> 
+        checkedCounts={this.state.checkedTotalShoppingListItemCount} />
     )
   }
 
@@ -354,26 +355,26 @@ class App extends React.Component {
    * Show UI for shopping list items
    */
   renderShoppingListItems = () => {
-    if (this.state.shoppingListItems.size < 1) 
+    if (this.state.shoppingListItems.size < 1)
       return ( <Card style={{margin:"12px 0"}}><CardTitle title={NOITEMSMSG} /></Card> );
     return (
-      <ShoppingList 
-        shoppingListItems={this.state.shoppingListItems} 
-        deleteFunc={this.deleteShoppingListItem} 
-        toggleItemCheckFunc={this.toggleItemCheck} 
-        renameItemFunc={this.renameShoppingListItem} /> 
+      <ShoppingList
+        shoppingListItems={this.state.shoppingListItems}
+        deleteFunc={this.deleteShoppingListItem}
+        toggleItemCheckFunc={this.toggleItemCheck}
+        renameItemFunc={this.renameShoppingListItem} />
     )
   }
 
   /**
-   * If we're showing items from a shopping list, show a back button.  
+   * If we're showing items from a shopping list, show a back button.
    * If we're showing shopping lists, show a settings button.
    */
   renderBackButton = () => {
-    if (this.state.view === 'items') 
+    if (this.state.view === 'items')
       return (<IconButton touch={true} onClick={this.getShoppingLists}><KeyboardBackspace /></IconButton>)
-    else 
-      return (<img src="cart_sm.png" width="48px" alt="Shopping List app logo" />)
+    else
+      return (<img src="datum-logo.png" width="140px" alt="Shopping List app logo" />)
   }
 
   renderActionButtons = () => {
@@ -441,17 +442,17 @@ class App extends React.Component {
     ];
 
     return (
-      <Dialog 
-        title="Shopping List Settings" 
-        actions={actions} 
-        modal={false} 
-        open={this.state.settingsOpen} 
+      <Dialog
+        title="Shopping List Settings"
+        actions={actions}
+        modal={false}
+        open={this.state.settingsOpen}
         onRequestClose={this.handleCloseSettings}
       >
       <p>Enter a fully qualified URL (including username and password) to a remote IBM Cloudant, Apache CouchDB, or PouchDB database to sync your shopping list.</p>
-      <TextField id="db-url" 
-        floatingLabelText="https://username:password@localhost:5984/database" 
-        fullWidth={true} 
+      <TextField id="db-url"
+        floatingLabelText="https://username:password@localhost:5984/database"
+        fullWidth={true}
         onChange={ e => {this.tempdburl = e.target.value} } />
       </Dialog>
     )
@@ -466,11 +467,11 @@ class App extends React.Component {
     ];
 
     return (
-      <Dialog 
-        title="About" 
-        actions={actions} 
-        modal={false} 
-        open={this.state.aboutOpen} 
+      <Dialog
+        title="About"
+        actions={actions}
+        modal={false}
+        open={this.state.aboutOpen}
         onRequestClose={this.handleAboutSettings}
       >
       <p>
@@ -486,14 +487,14 @@ class App extends React.Component {
    * Show the UI
    */
   render() {
-    let screenname = "Shopping List";
+    let screenname = "";
     if (this.state.view === 'items') screenname = this.state.shoppingList.title;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
       <div className="App">
-        <AppBar title={screenname} 
+        <AppBar title={screenname}
                 iconElementLeft={this.renderBackButton()}
-                style={appBarStyle} 
+                style={appBarStyle}
                 iconElementRight={this.renderActionButtons()} />
         <div className={'listsanditems'} style={{margin:'8px'}}>
           {this.state.adding ? this.renderNewNameUI() : <span/>}
@@ -501,9 +502,9 @@ class App extends React.Component {
         </div>
         {this.state.settingsOpen ? this.showSettingsDialog() : <span/>}
         {this.state.aboutOpen ? this.showAboutDialog() : <span/>}
-        <FloatingActionButton 
-          onClick={this.displayAddingUI} 
-          mini={true}
+        <FloatingActionButton
+          onClick={this.displayAddingUI}
+          mini={false}
           style={{position: 'fixed', bottom:'25px', right:'25px'}}>
           <ContentAdd />
         </FloatingActionButton>

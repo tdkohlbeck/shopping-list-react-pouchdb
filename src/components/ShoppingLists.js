@@ -21,7 +21,7 @@ class ShoppingLists extends React.Component {
   // all state actions are for handling the renaming dialog
   state = {
     open: false,
-    activeListId: '', 
+    activeListId: '',
     oldName: '',
     newName: ''
   };
@@ -44,8 +44,8 @@ class ShoppingLists extends React.Component {
   }
 
   /**
-   * Show the UI. The most important thing happening here is that the UI elements 
-   * make use of the functions passed into the component as props to do all the heavy 
+   * Show the UI. The most important thing happening here is that the UI elements
+   * make use of the functions passed into the component as props to do all the heavy
    * lifting of manipulating shopping lists, so this component is pure UI.
    */
   render() {
@@ -64,29 +64,30 @@ class ShoppingLists extends React.Component {
       />,
     ];
     /* end rename dialog stuff */
-    
-    let listItems = this.props.shoppingLists.map( (list) => 
+
+    let listItems = this.props.shoppingLists.map( (list) =>
     <Card key={list._id} style={{margin:"12px 0"}}>
-      <CardTitle 
-        title={list.title} 
+      <CardTitle
+        title={list.title}
         children={
-          <IconMenu iconButtonElement={iconButtonElement}   
+          <IconMenu iconButtonElement={iconButtonElement}
             className="vertmenu-list">
-            <MenuItem 
-              primaryText="Open" 
+            <MenuItem
+              primaryText="Open"
               onClick={()=>this.props.openListFunc(list._id)}/>
-            <MenuItem 
+            <MenuItem
               primaryText="Rename"
               onClick={()=>this.handleOpen(list._id, list.title)}/>
-            <MenuItem 
-              primaryText="Delete" 
+            <MenuItem
+              primaryText="Delete"
               onClick={()=>this.props.deleteListFunc(list._id)}/>
           </IconMenu>
         } />
       <CardActions>
         <Checkbox label={(this.props.checkedCounts.get(list._id) || 0)+' of '+(this.props.totalCounts.get(list._id) || 0)+' items checked'}
-          checked={list.checked} 
+          checked={list.checked}
           onCheck={()=>this.props.checkAllFunc(list._id)} />
+        
       </CardActions>
     </Card>
   )
@@ -100,8 +101,8 @@ class ShoppingLists extends React.Component {
         open={this.state.open}
         onRequestClose={this.handleClose}>
           <TextField className="form-control" type="text" id="textfield-item-rename"
-          defaultValue={this.state.oldName} 
-          onChange={this.updateName} 
+          defaultValue={this.state.oldName}
+          onChange={this.updateName}
           fullWidth={true} />
       </Dialog>
     </div>
@@ -110,9 +111,9 @@ class ShoppingLists extends React.Component {
 }
 
 ShoppingLists.PropTypes = {
-    shoppingLists: PropTypes.array.isRequired, 
-    deleteFunc: PropTypes.func.isRequired, 
-    openListFunc: PropTypes.func.isRequired, 
+    shoppingLists: PropTypes.array.isRequired,
+    deleteFunc: PropTypes.func.isRequired,
+    openListFunc: PropTypes.func.isRequired,
     renameListFunc: PropTypes.func.isRequired
 }
 

@@ -499,6 +499,7 @@ class App extends React.Component {
         <div className={'listsanditems'} style={{margin:'8px'}}>
           {this.state.adding ? this.renderNewNameUI() : <span/>}
           {this.state.view === 'lists' ? this.renderShoppingLists() : this.renderShoppingListItems()}
+          <ActiveDatumInput />
         </div>
         {this.state.settingsOpen ? this.showSettingsDialog() : <span/>}
         {this.state.aboutOpen ? this.showAboutDialog() : <span/>}

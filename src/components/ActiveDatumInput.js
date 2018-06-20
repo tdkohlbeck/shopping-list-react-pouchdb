@@ -249,21 +249,6 @@ class IntegrationReactSelect extends React.Component {
         <Input
           fullWidth
           inputComponent={SelectWrapped}
-          value={this.state.single}
-          onChange={this.handleChange('single')}
-          placeholder="Search a country (start with a)"
-          id="react-select-single"
-          inputProps={{
-            classes,
-            name: 'react-select-single',
-            instanceId: 'react-select-single',
-            simpleValue: true,
-            options: suggestions,
-          }}
-        />
-        <Input
-          fullWidth
-          inputComponent={SelectWrapped}
           value={this.state.multi}
           onChange={this.handleChange('multi')}
           placeholder="Select multiple countries"
@@ -275,28 +260,6 @@ class IntegrationReactSelect extends React.Component {
             id: 'react-select-chip',
             simpleValue: true,
             options: suggestions,
-          }}
-        />
-        <TextField
-          fullWidth
-          value={this.state.multiLabel}
-          onChange={this.handleChange('multiLabel')}
-          placeholder="Select multiple countries"
-          name="react-select-chip-label"
-          label="With label"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          InputProps={{
-            inputComponent: SelectWrapped,
-            inputProps: {
-              classes,
-              multi: true,
-              instanceId: 'react-select-chip-label',
-              id: 'react-select-chip-label',
-              simpleValue: true,
-              options: suggestions,
-            },
           }}
         />
       </div>

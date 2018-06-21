@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card, CardActions, CardTitle} from 'material-ui/Card';
+import { Card, CardActions, CardTitle } from 'material-ui/Card';
 import Checkbox from 'material-ui/Checkbox';
 import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';

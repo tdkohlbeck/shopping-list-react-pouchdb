@@ -23,6 +23,7 @@ import styled from 'styled-components'
 import ShoppingLists from './components/ShoppingLists';
 import ShoppingList from './components/ShoppingList';
 import ActiveDatumInput from './components/ActiveDatumInput'
+import DatumView from './components/DatumView'
 
 // create a custom color scheme for Material-UI
 const muiTheme = getMuiTheme({
@@ -500,7 +501,7 @@ class App extends React.Component {
         <div className={'listsanditems'} style={{margin:'8px'}}>
           {this.state.adding ? this.renderNewNameUI() : <span/>}
           {this.state.view === 'lists' ? this.renderShoppingLists() : this.renderShoppingListItems()}
-
+          <DatumView />
         </div>
         {this.state.settingsOpen ? this.showSettingsDialog() : <span/>}
         {this.state.aboutOpen ? this.showAboutDialog() : <span/>}

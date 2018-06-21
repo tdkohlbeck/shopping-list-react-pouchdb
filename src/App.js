@@ -18,6 +18,7 @@ import AboutIcon from 'material-ui/svg-icons/action/info-outline';
 import {grey800, blueGrey500, pinkA100, white} from 'material-ui/styles/colors';
 
 import PouchDB from 'pouchdb';
+import styled from 'styled-components'
 
 import ShoppingLists from './components/ShoppingLists';
 import ShoppingList from './components/ShoppingList';
@@ -499,16 +500,17 @@ class App extends React.Component {
         <div className={'listsanditems'} style={{margin:'8px'}}>
           {this.state.adding ? this.renderNewNameUI() : <span/>}
           {this.state.view === 'lists' ? this.renderShoppingLists() : this.renderShoppingListItems()}
-          <ActiveDatumInput />
+
         </div>
         {this.state.settingsOpen ? this.showSettingsDialog() : <span/>}
         {this.state.aboutOpen ? this.showAboutDialog() : <span/>}
         <FloatingActionButton
           onClick={this.displayAddingUI}
-          mini={false}
-          style={{position: 'fixed', bottom:'25px', right:'25px'}}>
+          mini={true}
+          style={{position: 'fixed', bottom:'0.5em', right:'0.5em'}}>
           <ContentAdd />
         </FloatingActionButton>
+        <ActiveDatumInput />
       </div>
       </MuiThemeProvider>
     )

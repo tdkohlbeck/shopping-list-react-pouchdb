@@ -1,15 +1,15 @@
 {
-  "name": "shopping-list-react-pouchdb",
+  "name": "datum-app",
   "version": "0.1.0",
-  "homepage": "https://ibm-watson-data-lab.github.io/shopping-list-react-pouchdb/",
+  "homepage": "https://github.com/tdkohlbeck/datum-app",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ibm-watson-data-lab/shopping-list-react-pouchdb.git"
+    "url": ""
   },
-  "author": "Raj Singh",
+  "author": "Travis Kohlbeck",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ibm-watson-data-lab/shopping-list-react-pouchdb/issues"
+    "url": ""
   },
   "dependencies": {
     "@material-ui/core": "^1.2.2",

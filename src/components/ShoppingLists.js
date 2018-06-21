@@ -11,6 +11,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
+import ActiveDatumInput from './ActiveDatumInput'
+
 const iconButtonElement = (
     <IconButton touch={true} tooltip="more" tooltipPosition="bottom-left">
         <MoreVertIcon />
@@ -87,7 +89,7 @@ class ShoppingLists extends React.Component {
         <Checkbox label={(this.props.checkedCounts.get(list._id) || 0)+' of '+(this.props.totalCounts.get(list._id) || 0)+' items checked'}
           checked={list.checked}
           onCheck={()=>this.props.checkAllFunc(list._id)} />
-        
+
       </CardActions>
     </Card>
   )

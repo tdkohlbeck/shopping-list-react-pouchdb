@@ -15,23 +15,26 @@ import IconButton from 'material-ui/IconButton';
 import KeyboardBackspace from 'material-ui/svg-icons/hardware/keyboard-backspace';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import AboutIcon from 'material-ui/svg-icons/action/info-outline';
-import {grey800, blueGrey500, pinkA100, white} from 'material-ui/styles/colors';
+//import {grey800, blueGrey500, pinkA100, white} from 'material-ui/styles/colors';
 
 import PouchDB from 'pouchdb';
-import styled from 'styled-components'
 
 import ShoppingLists from './components/ShoppingLists';
 import ShoppingList from './components/ShoppingList';
 import ActiveDatumInput from './components/ActiveDatumInput'
 import DatumView from './components/DatumView'
 
+// debug printing
+const p = (variable) => (console.log(variable, eval(variable)))
+
+
 // create a custom color scheme for Material-UI
 const muiTheme = getMuiTheme({
   palette: {
-    textColor: grey800,
-    alternateTextColor: white,
+    //textColor: grey800,
+    //alternateTextColor: white,
     primary1Color: '#ff3333',
-    accent1Color: blueGrey500
+    //accent1Color: blueGrey500
   }
 });
 
@@ -43,9 +46,6 @@ const appBarStyle = {
 const NOLISTMSG = "Click the + sign above to create a shopping list."
 const NOITEMSMSG = "Click the + sign above to create a shopping list item."
 
-/**
- * This is the main React application
- */
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -63,15 +63,15 @@ class App extends React.Component {
       view: 'lists',
       newName: '',
       settingsOpen: false,
-      aboutOpen: false
+      aboutOpen: false,
+      activeDatum: ['one'],
+      datums: [
+        ['another', 'whooo'],
+        ['eyyy'],
+      ],
     }
   }
 
-  /**
-   * Before this component shows the user anything, get the data from the local PouchDB
-   *
-   * Then, if we were initialized with a remote DB, synchronize with it
-   */
   componentDidMount = () => {
       this.getShoppingLists();
       if (this.remoteDB) {
@@ -79,9 +79,6 @@ class App extends React.Component {
       }
   }
 
-  /**
-   * Synchronize local PouchDB with a remote CouchDB or Cloudant
-   */
   syncToRemote = () => {
     this.props.localDB.sync(this.remoteDB, {live: true, retry: true})
     .on('change', change => {
@@ -90,11 +87,8 @@ class App extends React.Component {
     // .on('paused', info => console.log('replication paused.'))
     // .on('active', info => console.log('replication resumed.'))
     .on('error', err => console.log('uh oh! an error occured while synching.'));
-}
+  }
 
-  /**
-   * From the local DB, load all the shopping lists and item counts and which are checked
-   */
   getShoppingLists = () => {
     let checkedCount = List();
     let totalCount = List();
@@ -131,10 +125,6 @@ class App extends React.Component {
     });
   }
 
-  /**
-   * Get a shopping list by id
-   * @param {string} listid id of a shopping list
-   */
   openShoppingList = (listid) => {
     this.props.shoppingListRepository.get(listid).then( list => {
       return list;
@@ -149,10 +139,6 @@ class App extends React.Component {
     });
   }
 
-  /**
-   * Get the items in a shopping list
-   * @param {string} listid id of a shopping list
-   */
   getShoppingListItems = (listid) => {
     return this.props.shoppingListRepository.findItems({
       selector: {
@@ -162,10 +148,6 @@ class App extends React.Component {
     });
   }
 
-  /**
-   * Refresh the items in a shopping list
-   * @param {string} listid id of a shopping list
-   */
   refreshShoppingListItems = (listid) => {
     this.props.shoppingListRepository.findItems({
       selector: {
@@ -180,11 +162,6 @@ class App extends React.Component {
     });
   }
 
-  /**
-   * Change the name of an item
-   * @param {string} itemid id of an item
-   * @param {string} newname new name of the item
-   */
   renameShoppingListItem = (itemid, newname) => {
     console.log('IN renameShoppingListItem with id='+itemid+', name='+newname);
     this.props.shoppingListRepository.getItem(itemid).then(item => {
@@ -193,20 +170,12 @@ class App extends React.Component {
     }).then(this.refreshShoppingListItems(this.state.shoppingList._id));
   }
 
-  /**
-   * Delete an item
-   * @param {string} itemid id of an item
-   */
   deleteShoppingListItem = (itemid) => {
     this.props.shoppingListRepository.getItem(itemid).then(item => {
       return this.props.shoppingListRepository.deleteItem(item);
     }).then(this.refreshShoppingListItems(this.state.shoppingList._id));
   }
 
-  /**
-   * Check off or un-check an item
-   * @param {event} evt The click event on the UI element requesting to toggle state. It's id is the item id
-   */
   toggleItemCheck = (evt) => {
     let itemid = evt.target.dataset.id;
     this.props.shoppingListRepository.getItem(itemid).then(item => {
@@ -215,10 +184,6 @@ class App extends React.Component {
     }).then(this.refreshShoppingListItems(this.state.shoppingList._id));
   }
 
-  /**
-   * Check off all items in the shopping list
-   * @param {string} listid id of a shopping list
-   */
   checkAllListItems = (listid) => {
     let listcheck = true;
     this.getShoppingListItems(listid).then( items => {
@@ -247,10 +212,6 @@ class App extends React.Component {
     });
   }
 
-  /**
-   * Delete a shopping list
-   * @param {string} listid id of a shopping list
-   */
   deleteShoppingList = (listid) => {
     this.props.shoppingListRepository.get(listid).then(shoppingList => {
       shoppingList = shoppingList.set("_deleted", true);
@@ -260,11 +221,6 @@ class App extends React.Component {
     });
   }
 
-  /**
-   * Change the name of a shopping list
-   * @param {string} listid id of a shopping list
-   * @param {string} newname new name of the list
-   */
   renameShoppingList = (listid, newname) => {
     this.props.shoppingListRepository.get(listid).then(shoppingList => {
       shoppingList = shoppingList.set('title', newname);
@@ -272,10 +228,6 @@ class App extends React.Component {
     }).then(this.getShoppingLists);
   }
 
-  /**
-   * Create a new shopping list or item based on where the event came from
-   * @param {event} evt The click event on the UI element requesting to the action. Get the name from state and decide whether to add a list or an item based on the `state.view`
-   */
   createNewShoppingListOrItem = (e) => {
     e.preventDefault();
     this.setState({adding: false});
@@ -301,24 +253,15 @@ class App extends React.Component {
     }
   }
 
-  /**
-   * Set the new name the user has typed in state for pickup later by other functions
-   * @param {event} evt The change event on the UI element that let's user type a name
-   */
   updateName = (evt) => {
     this.setState({newName: evt.target.value});
   }
 
-  /**
-   * Tell the component we're in adding list or item mode
-   */
+  /*
   displayAddingUI = () => {
     this.setState({adding: true});
   }
-
-  /**
-   * Show UI for typing in a new name
-   */
+  */
   renderNewNameUI = () => {
     return (
       <form onSubmit={this.createNewShoppingListOrItem} style={{marginTop:'12px'}}>
@@ -335,9 +278,6 @@ class App extends React.Component {
     );
   }
 
-  /**
-   * Show UI for shopping lists
-   */
   renderShoppingLists = () => {
     if (this.state.shoppingLists.length < 1)
       return ( <Card style={{margin:"12px 0"}}><CardTitle title={NOLISTMSG} /></Card> );
@@ -353,9 +293,6 @@ class App extends React.Component {
     )
   }
 
-  /**
-   * Show UI for shopping list items
-   */
   renderShoppingListItems = () => {
     if (this.state.shoppingListItems.size < 1)
       return ( <Card style={{margin:"12px 0"}}><CardTitle title={NOITEMSMSG} /></Card> );
@@ -368,10 +305,6 @@ class App extends React.Component {
     )
   }
 
-  /**
-   * If we're showing items from a shopping list, show a back button.
-   * If we're showing shopping lists, show a settings button.
-   */
   renderBackButton = () => {
     if (this.state.view === 'items')
       return (<IconButton touch={true} onClick={this.getShoppingLists}><KeyboardBackspace /></IconButton>)
@@ -391,37 +324,22 @@ class App extends React.Component {
     );
   }
 
-  /**
-   * Tell component we want to show settings dialog
-   */
   handleOpenSettings = () => {
     this.setState({settingsOpen: true});
   }
 
-  /**
-   * Tell component we want to hide settings dialog
-   */
   handleCloseSettings = () => {
     this.setState({settingsOpen: false});
   }
 
-  /**
-   * Tell component we want to show about dialog
-   */
   handleOpenAbout = () => {
     this.setState({aboutOpen: true});
   }
 
-  /**
-   * Tell component we want to hide about dialog
-   */
   handleCloseAbout = () => {
     this.setState({aboutOpen: false});
   }
 
-  /**
-   * Right now the only setting is changing the remote DB, so do that then close the dialog
-   */
   handleSubmitSettings = () => {
     try {
       this.remoteDB = new PouchDB(this.tempdburl);
@@ -434,9 +352,6 @@ class App extends React.Component {
     this.handleCloseSettings();
   }
 
-  /**
-   * Show settings dialog UI
-   */
   showSettingsDialog = () => {
     const actions = [
         <FlatButton label="Cancel" primary={false} keyboardFocused={true} onClick={this.handleCloseSettings} />,
@@ -460,9 +375,6 @@ class App extends React.Component {
     )
   }
 
-  /**
-   * Show about dialog UI
-   */
   showAboutDialog = () => {
     const actions = [
         <FlatButton label="Close" primary={false} keyboardFocused={true} onClick={this.handleCloseAbout} />
@@ -485,34 +397,58 @@ class App extends React.Component {
     )
   }
 
-  /**
-   * Show the UI
-   */
+  renderDatumList = () => {
+    const views = this.state.datums.map( (datum, i) => (
+      <DatumView key={i} tags={datum} />
+    ))
+    return views
+  }
+
+  updateActiveDatum = (currentSelectOptions) => {
+    const tags = currentSelectOptions.map( option => option.value)
+    this.setState({
+      activeDatum: tags,
+    })
+  }
+
+  submitDatum = () => {
+    let datums = this.state.datums
+    datums.push(this.state.activeDatum)
+    this.setState({
+      datums: datums,
+      activeDatum: [],
+    })
+  }
+
   render() {
     let screenname = "";
     if (this.state.view === 'items') screenname = this.state.shoppingList.title;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-      <div className="App">
-        <AppBar title={screenname}
-                iconElementLeft={this.renderBackButton()}
-                style={appBarStyle}
-                iconElementRight={this.renderActionButtons()} />
-        <div className={'listsanditems'} style={{margin:'8px'}}>
-          {this.state.adding ? this.renderNewNameUI() : <span/>}
-          {this.state.view === 'lists' ? this.renderShoppingLists() : this.renderShoppingListItems()}
-          <DatumView />
+        <div className="App">
+          <AppBar title={screenname}
+                  iconElementLeft={this.renderBackButton()}
+                  style={appBarStyle}
+                  iconElementRight={this.renderActionButtons()} />
+          <div className={'listsanditems'} style={{margin:'8px'}}>
+            {this.state.adding ? this.renderNewNameUI() : <span/>}
+            {this.state.view === 'lists' ? this.renderShoppingLists() : this.renderShoppingListItems()}
+            {this.renderDatumList()}
+          </div>
+          {this.state.settingsOpen ? this.showSettingsDialog() : <span/>}
+          {this.state.aboutOpen ? this.showAboutDialog() : <span/>}
+          <FloatingActionButton
+            onClick={this.addDatum}
+            mini={true}
+            style={{position: 'fixed', bottom:'0.5em', right:'0.5em'}}>
+            <ContentAdd />
+          </FloatingActionButton>
+          <ActiveDatumInput
+            tags={this.state.activeDatum}
+            onChange={this.updateActiveDatum}
+            onSubmit={this.submitDatum}
+          />
         </div>
-        {this.state.settingsOpen ? this.showSettingsDialog() : <span/>}
-        {this.state.aboutOpen ? this.showAboutDialog() : <span/>}
-        <FloatingActionButton
-          onClick={this.displayAddingUI}
-          mini={true}
-          style={{position: 'fixed', bottom:'0.5em', right:'0.5em'}}>
-          <ContentAdd />
-        </FloatingActionButton>
-        <ActiveDatumInput />
-      </div>
       </MuiThemeProvider>
     )
   }

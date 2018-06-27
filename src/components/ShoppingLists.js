@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
 import { Card, CardActions, CardTitle } from 'material-ui/Card';
 import Checkbox from 'material-ui/Checkbox';
 import MenuItem from 'material-ui/MenuItem';
@@ -112,11 +112,11 @@ class ShoppingLists extends React.Component {
   }
 }
 
-ShoppingLists.PropTypes = {
-    shoppingLists: PropTypes.array.isRequired,
-    deleteFunc: PropTypes.func.isRequired,
-    openListFunc: PropTypes.func.isRequired,
-    renameListFunc: PropTypes.func.isRequired
-}
+/*ShoppingLists.propTypes = {
+    shoppingLists: propTypes.array.isRequired,
+    deleteFunc: propTypes.func.isRequired,
+    openListFunc: propTypes.func.isRequired,
+    renameListFunc: propTypes.func.isRequired
+}*/
 
 export default ShoppingLists;

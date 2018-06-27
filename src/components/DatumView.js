@@ -6,14 +6,14 @@ import styled from 'styled-components'
 
 const View = styled(Paper)`
   display: flex;
-  white-space: nowrap;
 
+  justify-content: space-between;
   padding: 0.25em;
+  margin-bottom: 0.5em;
 `
 const Tags = styled.div`
-  display: inline-block;
+  display: flex;
   justify-content: flex-start;
-  overflow: scroll;
 `
 const Delete = styled(DeleteIcon)`
   margin: 0;
@@ -24,19 +24,11 @@ const IconButton = styled(Button)`
   padding: 0;
 `
 
-const tag_names = [
-  'yey',
-  'wide-arm push-ups',
-  'bravo',
-  'and another',
-  'mooore',
-]
-
 const DatumView = props => (
-  <View classes='rounded'>
+  <View>
     <Tags>
-      {tag_names.map( name => (
-        <Button size='small'>{name}</Button>
+      {props.tags.map( (name, i) => (
+        <Button key={i} size='small'>{name}</Button>
       ))}
     </Tags>
     <IconButton variant='outlined' size='small'><Delete /></IconButton>

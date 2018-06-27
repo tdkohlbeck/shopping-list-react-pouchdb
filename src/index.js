@@ -26,11 +26,16 @@ const shoppingListFactory = new ShoppingListFactory();
 const shoppingListRepository = new ShoppingListRepositoryPouchDB(localDB);
 
 // key offline-first step - more info at https://developers.google.com/web/fundamentals/primers/service-workers/
-registerServiceWorker(); 
+registerServiceWorker();
 // create the app with access to the helper interfaces, the local database store (PouchDB), and the remote one
 shoppingListRepository.ensureIndexes().then((response) => {
-    ReactDOM.render(<App shoppingListFactory={shoppingListFactory} shoppingListRepository={shoppingListRepository} localDB={localDB} remoteDB={remoteDB} />, document.getElementById('root'));
+    ReactDOM.render(<App
+      shoppingListFactory={shoppingListFactory}
+      shoppingListRepository={shoppingListRepository}
+      localDB={localDB}
+      remoteDB={remoteDB}
+    />, document.getElementById('root'));
 }).catch( reason => {
     console.log("in put catch");
-    console.log(reason) 
+    console.log(reason)
 });

@@ -9,26 +9,17 @@ const Container = styled.div`
   right: 3.5em;
 `
 
-const p = (variable) => (console.log(variable, eval(variable)))
-
 const option = label => ({
   label,
   value: label//.toLowerCase().replace(/\W/g, ''),
 })
 
 const createOptions = strings => {
-  if (!strings) return []
   const options = strings.map( string => ({
     label: string,
-    value: string,//.toLowerCase().replace(/\W/g, ''),
+    value: string.toLowerCase().replace(/\W/g, ''),
   }))
   return options
-}
-
-const convertOptionsToStrings = options => {
-  const strings = options.map( option => {
-    return option.value
-  })
 }
 
 const options = createOptions([
@@ -50,8 +41,6 @@ class ActiveDatumInput extends Component {
   handleKeyDown = (e) => {
     if (e.keyCode === 13 && !this.state.inputValue) { // Enter
       this.props.onSubmit()
-    } else {
-      this.setState({ inputValue: e.target.value })
     }
   }
   render = () => (

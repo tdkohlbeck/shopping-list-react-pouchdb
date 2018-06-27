@@ -64,10 +64,13 @@ class App extends React.Component {
       newName: '',
       settingsOpen: false,
       aboutOpen: false,
-      activeDatum: ['one'],
+      activeDatum: [],
       datums: [
-        ['another', 'whooo'],
-        ['eyyy'],
+        ['water', '10'],
+        ['weight', '151.4', 'lbs'],
+        ['coffee'],
+        ['water', '10'],
+        ['coffee']
       ],
     }
   }
@@ -412,6 +415,7 @@ class App extends React.Component {
   }
 
   submitDatum = () => {
+    if (!this.state.activeDatum.length) return
     let datums = this.state.datums
     datums.push(this.state.activeDatum)
     this.setState({
@@ -426,28 +430,32 @@ class App extends React.Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className="App">
-          <AppBar title={screenname}
-                  iconElementLeft={this.renderBackButton()}
-                  style={appBarStyle}
-                  iconElementRight={this.renderActionButtons()} />
-          <div className={'listsanditems'} style={{margin:'8px'}}>
+          <AppBar
+            title={screenname}
+            iconElementLeft={this.renderBackButton()}
+            style={appBarStyle}
+            iconElementRight={this.renderActionButtons()}
+          />
+          <div className={'listsanditems'} style={{margin:'8px', /*paddingBottom:'3em'*/}}>
             {this.state.adding ? this.renderNewNameUI() : <span/>}
             {this.state.view === 'lists' ? this.renderShoppingLists() : this.renderShoppingListItems()}
             {this.renderDatumList()}
           </div>
           {this.state.settingsOpen ? this.showSettingsDialog() : <span/>}
           {this.state.aboutOpen ? this.showAboutDialog() : <span/>}
-          <FloatingActionButton
-            onClick={this.addDatum}
-            mini={true}
-            style={{position: 'fixed', bottom:'0.5em', right:'0.5em'}}>
-            <ContentAdd />
-          </FloatingActionButton>
-          <ActiveDatumInput
-            tags={this.state.activeDatum}
-            onChange={this.updateActiveDatum}
-            onSubmit={this.submitDatum}
-          />
+          <div style={{width:'100%', height:'3em'}}>
+            <ActiveDatumInput
+              tags={this.state.activeDatum}
+              onChange={this.updateActiveDatum}
+              onSubmit={this.submitDatum}
+            />
+            <FloatingActionButton
+              onClick={this.submitDatum}
+              mini={true}
+              style={{position: 'fixed', bottom:'0.5em', right:'0.5em'}}>
+              <ContentAdd />
+            </FloatingActionButton>
+          </div>
         </div>
       </MuiThemeProvider>
     )

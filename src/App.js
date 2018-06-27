@@ -75,11 +75,18 @@ class App extends React.Component {
     }
   }
 
+  scrollToEnd = () => this.endOfList.scrollIntoView({ behavior: 'smooth' })
+
   componentDidMount = () => {
+    this.scrollToEnd()
       this.getShoppingLists();
       if (this.remoteDB) {
         this.syncToRemote();
       }
+  }
+
+  componentDidUpdate = () => {
+    this.scrollToEnd()
   }
 
   syncToRemote = () => {
@@ -457,6 +464,10 @@ class App extends React.Component {
             </FloatingActionButton>
           </div>
         </div>
+        <div
+          style={{ float:'left', clear:'both' }}
+          ref={el => { this.endOfList = el }}
+        />
       </MuiThemeProvider>
     )
   }

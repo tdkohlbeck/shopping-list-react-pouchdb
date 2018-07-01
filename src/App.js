@@ -72,6 +72,15 @@ class App extends React.Component {
         ['water', '10'],
         ['coffee']
       ],
+      tagOptions: [
+        'water',
+        'coffee',
+        'weight',
+        'mood',
+        'anxiety',
+        'physical energy',
+        'mental energy',
+      ]
     }
   }
 
@@ -414,11 +423,16 @@ class App extends React.Component {
     return views
   }
 
-  updateActiveDatum = (currentSelectOptions) => {
-    const tags = currentSelectOptions.map( option => option.value)
-    this.setState({
+  updateActiveDatum = (currentSelectOptions, action) => {
+
+    const tags = currentSelectOptions.map( option => option.value )
+    const newState = {
       activeDatum: tags,
-    })
+    }
+    if (action.action === 'create-option') {
+      newState.tagOptions = this.state.tagOptions.concat(tags[tags.length-1])
+    }
+    this.setState(newState)
   }
 
   submitDatum = () => {
@@ -428,6 +442,12 @@ class App extends React.Component {
     this.setState({
       datums: datums,
       activeDatum: [],
+    })
+  }
+
+  addNewTagOption = (inputVal, newTag) => {
+    this.setState({
+      tagOptions: this.state.tagOptions.concat(newTag)
     })
   }
 
@@ -455,6 +475,7 @@ class App extends React.Component {
               tags={this.state.activeDatum}
               onChange={this.updateActiveDatum}
               onSubmit={this.submitDatum}
+              tagOptions={this.state.tagOptions}
             />
             <FloatingActionButton
               onClick={this.submitDatum}

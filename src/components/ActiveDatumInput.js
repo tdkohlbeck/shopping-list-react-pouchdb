@@ -41,10 +41,24 @@ export default class ActiveDatumInput extends Component {
         onInputChange={this.onInputChange}
         onKeyDown={this.checkIfSubmit}
         menuIsOpen={true}
-        styles={{menuList: base => ({
-          ...base,
-          display: 'inline-flex',
-        })}}
+        styles={{
+          menuList: base => ({
+            ...base,
+            display: 'flex',
+            flexWrap: 'wrap',
+          }),
+          option: base => ({
+            ...base,
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            maxWidth: '10em',
+            border: '1px solid',
+            borderColor: 'lightgrey',
+            borderRadius: '.25em',
+            margin: '.1em',
+          })
+        }}
       />
     </Container>
   )

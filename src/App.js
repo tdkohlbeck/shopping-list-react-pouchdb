@@ -80,6 +80,14 @@ class App extends React.Component {
         'anxiety',
         'physical energy',
         'mental energy',
+        'push ups',
+        'pull ups',
+        'wide arm push ups',
+        'knee push ups',
+        'distance',
+        'bpm',
+        'pace',
+        'calories',
       ]
     }
   }

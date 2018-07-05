@@ -21,6 +21,7 @@
     "material-ui": "^0.19.4",
     "metrics-tracker-client": "^0.2.3",
     "pouchdb": "^6.3.4",
+    "pouchdb-browser": "^7.0.0",
     "pouchdb-find": "^6.3.4",
     "prop-types": "^15.5.10",
     "react": "^16.4.1",

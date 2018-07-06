@@ -96,10 +96,10 @@ class App extends React.Component {
 
   componentDidMount = () => {
     this.scrollToEnd()
-      this.getShoppingLists();
-      if (this.remoteDB) {
-        this.syncToRemote();
-      }
+    this.getShoppingLists();
+    if (this.remoteDB) {
+      this.syncToRemote();
+    }
   }
 
   componentDidUpdate = () => {

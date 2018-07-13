@@ -1,6 +1,6 @@
 import React from 'react';
 import {List} from 'immutable';
-// We're using Material Design React components from http://www.material-ui.com
+// We're using Material Design React components from http://www.mater1ial-ui.com
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
@@ -19,14 +19,9 @@ import AboutIcon from 'material-ui/svg-icons/action/info-outline';
 
 import PouchDB from 'pouchdb';
 
-import ShoppingLists from './components/ShoppingLists';
-import ShoppingList from './components/ShoppingList';
+
 import ActiveDatumInput from './components/ActiveDatumInput'
 import DatumView from './components/DatumView'
-
-// debug printing
-const p = (variable) => (console.log(variable, eval(variable)))
-
 
 // create a custom color scheme for Material-UI
 const muiTheme = getMuiTheme({
@@ -51,7 +46,7 @@ class App extends React.Component {
     super(props);
     // manage remoteDB here because user might change it via the UI
     // but don't put it in state because changing the backend db doesn't require a re-render
-    this.remoteDB = props.remoteDB;
+    this.remoteDB = false
 
     this.state = {
       shoppingList: null,
@@ -88,7 +83,11 @@ class App extends React.Component {
         'bpm',
         'pace',
         'calories',
-      ]
+      ],
+	tagValueOptions: {
+	    'weight': [ 145, 150, 148 ],
+	    'mood': [ 1, 2, 3, 4, 5 ],
+	}
     }
   }
 
@@ -96,7 +95,7 @@ class App extends React.Component {
 
   componentDidMount = () => {
     this.scrollToEnd()
-    this.getShoppingLists();
+
     if (this.remoteDB) {
       this.syncToRemote();
     }
@@ -116,41 +115,6 @@ class App extends React.Component {
     .on('error', err => console.log('uh oh! an error occured while synching.'));
   }
 
-  getShoppingLists = () => {
-    let checkedCount = List();
-    let totalCount = List();
-    let lists = null;
-    this.props.shoppingListRepository.find().then( foundLists => {
-      console.log('GOT SHOPPING LISTS FROM POUCHDB. COUNT: '+foundLists.size);
-      lists = foundLists;
-      return foundLists;
-    }).then( foundLists => {
-      return this.props.shoppingListRepository.findItemsCountByList();
-    }).then( countsList => {
-      console.log('TOTAL COUNT LIST');
-      console.log(countsList);
-      totalCount = countsList;
-      return this.props.shoppingListRepository.findItemsCountByList({
-        selector: {
-          type: 'item',
-          checked: true
-        },
-        fields: ['list']
-      });
-    }).then( checkedList => {
-      console.log('CHECKED LIST');
-      console.log(checkedList);
-      checkedCount = checkedList;
-      this.setState({
-        view: 'lists',
-        shoppingLists: lists,
-        shoppingList: null,
-        shoppingListItems: null,
-        checkedTotalShoppingListItemCount: checkedCount,
-        totalShoppingListItemCount: totalCount
-      });
-    });
-  }
 
   openShoppingList = (listid) => {
     this.props.shoppingListRepository.get(listid).then( list => {
@@ -308,28 +272,15 @@ class App extends React.Component {
   renderShoppingLists = () => {
     if (this.state.shoppingLists.length < 1)
       return ( <Card style={{margin:"12px 0"}}><CardTitle title={NOLISTMSG} /></Card> );
-    return (
-      <ShoppingLists
-        shoppingLists={this.state.shoppingLists}
-        openListFunc={this.openShoppingList}
-        deleteListFunc={this.deleteShoppingList}
-        renameListFunc={this.renameShoppingList}
-        checkAllFunc={this.checkAllListItems}
-        totalCounts={this.state.totalShoppingListItemCount}
-        checkedCounts={this.state.checkedTotalShoppingListItemCount} />
-    )
+    return
+
   }
 
   renderShoppingListItems = () => {
     if (this.state.shoppingListItems.size < 1)
       return ( <Card style={{margin:"12px 0"}}><CardTitle title={NOITEMSMSG} /></Card> );
-    return (
-      <ShoppingList
-        shoppingListItems={this.state.shoppingListItems}
-        deleteFunc={this.deleteShoppingListItem}
-        toggleItemCheckFunc={this.toggleItemCheck}
-        renameItemFunc={this.renameShoppingListItem} />
-    )
+    return
+
   }
 
   renderBackButton = () => {
@@ -416,9 +367,8 @@ class App extends React.Component {
         onRequestClose={this.handleAboutSettings}
       >
       <p>
-        <a href="https://github.com/ibm-watson-data-lab/shopping-list" target="_blank">Shopping List is a series of Offline First demo apps, each built using a different stack.</a>
           These demo apps cover Progressive Web Apps, hybrid mobile apps, native mobile apps, and desktop apps. This particular demo app is a <strong>Progressive Web App</strong>
-          built using <strong>React and PouchDB</strong>. <a href="https://github.com/ibm-watson-data-lab/shopping-list-react-pouchdb" target="_blank">Get the source code</a>.
+          built using <strong>React and PouchDB</strong>
       </p>
       </Dialog>
     )
@@ -463,7 +413,7 @@ class App extends React.Component {
     let screenname = "";
     if (this.state.view === 'items') screenname = this.state.shoppingList.title;
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
+	    <MuiThemeProvider muiTheme={muiTheme} >
         <div className="App">
           <AppBar
             title={screenname}
@@ -472,8 +422,7 @@ class App extends React.Component {
             iconElementRight={this.renderActionButtons()}
           />
           <div className={'listsanditems'} style={{margin:'8px', /*paddingBottom:'3em'*/}}>
-            {this.state.adding ? this.renderNewNameUI() : <span/>}
-            {this.state.view === 'lists' ? this.renderShoppingLists() : this.renderShoppingListItems()}
+
             {this.renderDatumList()}
           </div>
           {this.state.settingsOpen ? this.showSettingsDialog() : <span/>}
@@ -483,6 +432,7 @@ class App extends React.Component {
               tags={this.state.activeDatum}
               onChange={this.updateActiveDatum}
               onSubmit={this.submitDatum}
+	      selected={true}
               tagOptions={this.state.tagOptions}
             />
             <FloatingActionButton
@@ -492,12 +442,13 @@ class App extends React.Component {
               <ContentAdd />
             </FloatingActionButton>
           </div>
-        </div>
+
         <div
           style={{ float:'left', clear:'both' }}
           ref={el => { this.endOfList = el }}
-        />
-      </MuiThemeProvider>
+            />
+	            </div>
+	    </MuiThemeProvider>
     )
   }
 }

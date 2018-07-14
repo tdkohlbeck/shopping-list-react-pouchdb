@@ -28,13 +28,13 @@ const muiTheme = getMuiTheme({
   palette: {
     //textColor: grey800,
     //alternateTextColor: white,
-    primary1Color: '#ff3333',
+    primary1Color: '#ff3d3d',
     //accent1Color: blueGrey500
   }
 });
 
 const appBarStyle = {
-  backgroundColor: '#ff3333',
+  backgroundColor: '#ff3d3d',
   width: "100%",
 };
 

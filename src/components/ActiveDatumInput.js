@@ -39,9 +39,9 @@ function createOptions(strings) {
   }))
 }
 
-const MultiValueLabel = props => {
+const MultiValueLabel = (props, name) => {
     return (
-	<Tag>
+	    <Tag tagName={name} >
 	    <components.MultiValueLabel {...props} />
 	</Tag>
     )
@@ -51,17 +51,21 @@ class Tag extends React.Component {
     constructor(props) {
 	super(props);
 	this.state = {
-	    dropdownOpen: false
+	    dropdownOpen: false,
+	    tagName: props.tagName,
 	};
+				this.toggle = this.toggle.bind(this)
     }
 
     toggle() {
+				console.log('toggled')
 	this.setState({
-	    dropdownOpen: !this.state.dropdownOpen
+	    dropdownOpen: !this.state.dropdownOpen,
 	});
     }
 
     render() {
+
 	return (
 	        <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
 		<DropdownToggle caret>
@@ -91,7 +95,7 @@ export default class ActiveDatumInput extends Component {
   }
     onInputChange = inputValue => {
 	this.setState({ inputValue })
-	console.log('change')
+
     }
   checkIfSubmit = e => {
       if (e.keyCode === 13 && !this.state.inputValue) { // Enter
@@ -108,6 +112,7 @@ export default class ActiveDatumInput extends Component {
 	onClick={ () => {
 	    this.setState({ isMenuOpen: false, isFocusBlocked: true })
 	}} />
+
       <CreatableSelect
        isMulti
        options={createOptions(this.props.tagOptions)}
@@ -120,7 +125,7 @@ export default class ActiveDatumInput extends Component {
        onKeyDown={this.checkIfSubmit}
 	menuIsOpen={this.state.isMenuOpen}
 	blurInputOnSelect
-	onFocus={() => console.log('click')}
+
         styles={{
           menuList: base => ({
             ...base,

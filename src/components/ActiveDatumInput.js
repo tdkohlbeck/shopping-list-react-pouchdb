@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import CreatableSelect, { components } from 'react-select'
 import * as Animated from 'react-select/lib/animated'
+import Button from '@material-ui/core/Button';
 import {
     ButtonDropdown,
     DropdownToggle,
@@ -23,13 +24,13 @@ display: ${props => props.isHidden ? 'none' : 'block'};
 height: 3em;
 `
 const BackgroundDimmer = styled.div`
-display: block;
+display: ${props => props.isDimming ? 'block' : 'none'};
 position: fixed;
 width: 100%;
 height: 100%;
 bottom: 0;
 left: 0;
-background-color: ${props => props.isDimming ? '#00000060' : 'transparent'};
+background-color: #00000060;
 `
 
 function createOptions(strings) {
@@ -41,9 +42,9 @@ function createOptions(strings) {
 
 const MultiValueLabel = (props, name) => {
     return (
-	    <Tag tagName={name} >
+	    <Button variant='contained' color='primary' >
 	    <components.MultiValueLabel {...props} />
-	</Tag>
+	</Button>
     )
 }
 
@@ -105,7 +106,6 @@ export default class ActiveDatumInput extends Component {
   }
     render = () => (
 	<React.Fragment>
-
 	    <Container>
 	    <BackgroundDimmer
 	isDimming={this.state.isMenuOpen}
